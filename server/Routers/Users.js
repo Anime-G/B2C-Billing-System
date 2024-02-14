@@ -1,7 +1,11 @@
+const { validtoken } =require("../Middleware/ValidToken");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { Users } = require("../models");
+const { sign } = require("jsonwebtoken");
+
+const { secreatKey } = require("../Const");
 //adding the Data --register
 router.post("/add", async (req, res) => {
     console.log(req.body);
@@ -30,8 +34,9 @@ router.post("/login", async (req, res) => {
     const match = await bcrypt.compare(password, originaldata.password);
     if (match) {
     const od = await Users.findOne({ where: { id:originaldata.id },attributes:{exclude:["password"]}});
+        const token=sign({id:od.id,name:od.name,emailid:od.emailid},secreatKey);
 
-      res.json({ data:od,msg: "Logged in SuccessFully!" });
+      res.json({token, data:od,msg: "Logged in SuccessFully!" });
     } else {
       res.json({ msg: "Invalid Username or password!" });
     }
@@ -57,4 +62,7 @@ router.post("/login", async (req, res) => {
       res.json({ msg: "Invalid Username or password!" });
     }
   });
+  router.post("/auth",validtoken,async (req,res)=>{
+      res.json(req.user);
+  })
 module.exports = router;

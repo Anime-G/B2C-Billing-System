@@ -1,12 +1,14 @@
 import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, Modal, Row, message } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { trimstring } from "../Trim";
 import { LoginNavkey, ServerApi } from "./Consts";
 import axios from 'axios'
+import { AuthContext } from "../Helper/AuthContext";
 const Login = () => {
+    const {setuser}=useContext(AuthContext);
   const [form, setForm] = useState(0);
   const navigate = useNavigate();
   const [formdata] = Form.useForm();
@@ -179,7 +181,7 @@ const Login = () => {
           }
           else{
               message.success(data.data.msg)
-                console.log(data.data.data);
+            localStorage.setItem("accessToken",data.data.token);
               formdata.resetFields();
               navigate("/");
           }
