@@ -1,13 +1,30 @@
 import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, message } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { trimstring } from "../Trim";
+import { LoginNavkey, ServerApi } from "./Consts";
+import axios from 'axios'
 const Login = () => {
   const [form, setForm] = useState(0);
   const navigate = useNavigate();
   const [formdata] = Form.useForm();
+  const [forgetup] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    forgetup.submit();
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   //0=login,1=register
   const bg = [
     window.location.origin + "/Image/LoginLogo.jpeg",
@@ -33,8 +50,8 @@ const Login = () => {
   const loginform = (
     <React.Fragment>
       <Form.Item
-        label="Emailid"
-        name="emailid"
+        label="username"
+        name="name"
         rules={[
           {
             required: true,
@@ -57,22 +74,20 @@ const Login = () => {
       >
         <Input.Password />
       </Form.Item>
-      <FormItem wrapperCol={{
-            span: 24,
-          }}>
-            <Row>
-
-            
-        <Col span={12}
-        style={{textAlign:"right",color:"gray"}}
-        >
-          <a >Forgot password?</a>
-        </Col>
-        <Col span={12}>
-          <Button type="primary" htmlType="submit">
-            Login
-          </Button>
-        </Col>
+      <FormItem
+        wrapperCol={{
+          span: 24,
+        }}
+      >
+        <Row>
+          <Col span={18} style={{ textAlign: "center", color: "gray" }}>
+            <a onClick={showModal}>Forgot password/username?</a>
+          </Col>
+          <Col span={6}>
+            <Button type="primary" htmlType="submit">
+              Login
+            </Button>
+          </Col>
         </Row>
       </FormItem>
     </React.Fragment>
@@ -143,12 +158,111 @@ const Login = () => {
       </Form.Item>
     </React.Fragment>
   );
-  const onlogin = (values) => {
-    console.log("Login Values :", values);
+
+  const onlogin =async (values) => {
+
+    // console.log("Login Values :", values);
+    let { name, password } = values;
+    name = trimstring(name).toLowerCase();
+    
+    password = password.trim();
+    
+    values = { name,   password };
+    if (password == "") {
+        formdata.setFieldsValue({ password});
+        message.error("Password is Empty or only contain whiteSpace!");
+      } else {
+        const data = await axios.post(ServerApi + "/Users/login", values);
+        if (data) {
+          if (data.data.err) {
+            message.error(data.data.err);
+          }
+          else{
+              message.success(data.data.msg)
+                console.log(data.data.data);
+              formdata.resetFields();
+              navigate("/");
+          }
+        }
+      }
   };
-  const onregister = (values) => {
-    console.log("Registration Values :", values);
+  const onregister = async (values) => {
+    let { name, emailid, confpassword, password } = values;
+    name = trimstring(name).toLowerCase();
+    emailid = trimstring(emailid).toLowerCase();
+    password = password.trim();
+    confpassword = confpassword.trim();
+    values = { name, emailid,  password };
+    if (password == "") {
+      formdata.setFieldsValue({ password, confpassword });
+      message.error("Password is Empty or only contain whiteSpace!");
+    } else if (password === confpassword) {
+      //register data
+      
+      
+      const data = await axios.post(ServerApi + "/Users/add", values);
+      if (data) {
+        if (data.data.err) {
+          message.error(data.data.err);
+        }
+        else{
+            message.success(data.data.msg)
+            
+            formdata.resetFields();
+            setForm(0);
+        }
+      }
+    } else {
+      message.error("password doesnot match!");
+    }
   };
+  const onforgotpassuser = (values) => {
+    console.log("onforgotpassuser Values :", values);
+    setIsModalVisible(false);
+  };
+  const modelforgotpassuser = (
+    <Modal
+      title="Forgot password or username?"
+      open={isModalVisible}
+      onOk={handleOk}
+      centered="true"
+      onCancel={handleCancel}
+    >
+      <Form
+        form={forgetup}
+        // key={bg}
+        name="Registration"
+        labelCol={{
+          span: 8,
+        }}
+        wrapperCol={{
+          span: 16,
+        }}
+        style={{
+          maxWidth: 600,
+          margin: "0px auto",
+        }}
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onforgotpassuser}
+        autoComplete="off"
+      >
+        <FormItem
+          label="Email Id"
+          name="emailid"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Emailid!",
+            },
+          ]}
+        >
+          <Input />
+        </FormItem>
+      </Form>
+    </Modal>
+  );
   return (
     <div>
       {/* card */}
@@ -236,6 +350,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {modelforgotpassuser}
     </div>
   );
 };
