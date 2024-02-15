@@ -181,7 +181,9 @@ const Login = () => {
           }
           else{
               message.success(data.data.msg)
-            localStorage.setItem("accessToken",data.data.token);
+              localStorage.setItem("accessToken",data.data.token);
+              const {id,name,emailid}=data.data.data;
+              setuser({id,name,emailid});
               formdata.resetFields();
               navigate("/");
           }
