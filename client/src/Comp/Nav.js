@@ -3,6 +3,7 @@ import { Menu } from "antd";
 import {
   HomeOutlined,
   LoginOutlined,
+  ProductOutlined,
   ProfileOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -11,6 +12,8 @@ import _ from "lodash";
 import { AuthContext } from "../Helper/AuthContext";
 import {
   FormAddNavkey,
+  FormsEditNavkey,
+  GoodsAddNavkey,
   HomeNavkey,
   LoginNavkey,
   LogoutNavKey,
@@ -23,6 +26,9 @@ import Page404 from "./Page404";
 import DispHome from "./DispHome";
 import Profile from "./Profile";
 import AddForms from "./AddForms";
+import Goods from "./Goods";
+
+import FormEdit from "./Form";
 const Nav = () => {
   const { user, setuser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -57,6 +63,11 @@ const Nav = () => {
           label: <Link to={"/" + ProfileNavKey}>Profile</Link>,
           key: ProfileNavKey,
           icon: <ProfileOutlined />,
+        },
+        {
+          label: <Link to={"/" + GoodsAddNavkey}>Goods</Link>,
+          key: GoodsAddNavkey,
+          icon: <ProductOutlined   />,
         },
         {
           label: "Logout",
@@ -95,6 +106,8 @@ const Nav = () => {
           <>
             <Route path={"/" + ProfileNavKey} element={<Profile />} />
             <Route path={"/" + FormAddNavkey} element={<AddForms />} />
+            <Route path={"/" + FormsEditNavkey+"/:id"} element={<FormEdit />} />
+            <Route path={"/" + GoodsAddNavkey} element={<Goods />} />
           </>
         ) : (
           ""

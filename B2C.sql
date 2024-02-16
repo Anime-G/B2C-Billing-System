@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 15, 2024 at 01:37 PM
+-- Generation Time: Feb 16, 2024 at 01:33 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,11 +33,35 @@ CREATE TABLE `Forms` (
   `shortName` varchar(250) DEFAULT NULL,
   `formGst` varchar(15) DEFAULT NULL,
   `address` varchar(250) DEFAULT NULL,
-  `phno` int(10) DEFAULT NULL,
+  `phno` bigint(10) DEFAULT NULL,
   `logo` varchar(1000) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `UserId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `Forms`
+--
+
+INSERT INTO `Forms` (`id`, `name`, `shortName`, `formGst`, `address`, `phno`, `logo`, `createdAt`, `updatedAt`, `UserId`) VALUES
+(1, 'spider corporation', 'SC', '67MNDOE1203R3ZT', '9/67 STREET 8,NEW CITY ,NEW YORK ,UNITED STATES', 3456789010, 'https://i.pinimg.com/736x/e8/5d/6d/e85d6d00d589ad361387d07170908ba4.jpg', '2024-02-16 05:56:57', '2024-02-16 05:56:57', 7),
+(2, 'formula 2', 'F2', '78PQRST3456D2ZE', '8/567,SARDAR MARKET ,SURAT   ,GUJARAT   ,INDIA', 1234563210, 'https://i.pinimg.com/736x/83/29/bf/8329bf432a74b5fe4fbb1f1021c7ce0c.jpg', '2024-02-16 06:13:47', '2024-02-16 10:31:42', 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Goods`
+--
+
+CREATE TABLE `Goods` (
+  `id` int(11) NOT NULL,
+  `name` varchar(250) DEFAULT NULL,
+  `HsnCode` int(11) DEFAULT NULL,
+  `GstRate` double DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  `FormId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -76,7 +100,15 @@ INSERT INTO `Users` (`id`, `name`, `password`, `emailid`, `createdAt`, `updatedA
 ALTER TABLE `Forms`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
+  ADD UNIQUE KEY `formGst` (`formGst`),
   ADD KEY `UserId` (`UserId`);
+
+--
+-- Indexes for table `Goods`
+--
+ALTER TABLE `Goods`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FormId` (`FormId`);
 
 --
 -- Indexes for table `Users`
@@ -94,6 +126,12 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Forms`
 --
 ALTER TABLE `Forms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `Goods`
+--
+ALTER TABLE `Goods`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -111,6 +149,12 @@ ALTER TABLE `Users`
 --
 ALTER TABLE `Forms`
   ADD CONSTRAINT `Forms_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Goods`
+--
+ALTER TABLE `Goods`
+  ADD CONSTRAINT `Goods_ibfk_1` FOREIGN KEY (`FormId`) REFERENCES `Forms` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,22 +1,15 @@
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Image,
-  Input,
-  Row,
-  Select,
-  message,
-} from "antd";
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../Helper/AuthContext";
 import axios from "axios";
-import { trimstring } from "../Trim";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProfileNavKey, ServerApi } from "./Consts";
-import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../Helper/AuthContext";
+import { trimstring } from "../Trim";
+import { Button, Card, Form, Image, Input, Select, message } from "antd";
 let secountry;
-const AddForms = () => {
+const FormEdit = () => {
+  const params = useParams();
+  const { id } = params;
+  const [form, setforms] = useState(null);
   const [formdata] = Form.useForm();
   const { user } = useContext(AuthContext);
   const [imgurl, setimgurl] = useState("");
@@ -35,6 +28,20 @@ const AddForms = () => {
     setstate([]);
     formdata.setFieldsValue({ country: "", state: "", city: "" });
   };
+  function capitalizeFirstLetter(string) {
+    // Split the string into words
+    let words = string.split(' ');
+  
+    // Capitalize the first letter of each word and convert the rest to lowercase
+    let capitalizedWords = words.map(word => {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+  
+    // Join the words back together into a single string
+    let capitalizedString = capitalizedWords.join(' ');
+  
+    return capitalizedString;
+  }
   const getstate = async (e) => {
     secountry = e;
     const data = await axios.post(
@@ -43,17 +50,14 @@ const AddForms = () => {
     );
     // console.log(data.data.data.states);
     setstate(data.data.data.states);
-    formdata.setFieldsValue({ state: null });
+    
     setcity([]);
   };
   const getcity = async (e) => {
-    // console.log(secountry);
+    // console.log(secountry.trim(),":",capitalizeFirstLetter(e).trim());
     const data = await axios.post(
-      "https://countriesnow.space/api/v0.1/countries/state/cities",
-      { country: secountry, state: e }
-    );
-    // console.log(data.data.data);
-    formdata.setFieldsValue({ city: null });
+      "https://countriesnow.space/api/v0.1/countries/state/cities",{ country: secountry.trim(), state: e.trim() });
+   
     setcity(data.data.data);
   };
 
@@ -66,6 +70,7 @@ const AddForms = () => {
       UserId,
       address,
       city,
+      id,
       country,
       formGst,
       logo,
@@ -75,7 +80,7 @@ const AddForms = () => {
       state,
     } = values;
     address =
-      trimstring(address.trim().replace(/^,|,$/g, '').toUpperCase()).trim(",") +
+      trimstring(address.trim().replace(/^,|,$/g, '').toUpperCase()) +
       " ," +
       city.toUpperCase() +
       " ," +
@@ -85,9 +90,9 @@ const AddForms = () => {
     formGst = formGst.toUpperCase();
     name = trimstring(name).toLowerCase();
     shortName = shortName.toUpperCase();
-    values = { UserId, address, formGst, logo, name, phno, shortName };
+    values = { UserId ,id, address, formGst, logo, name, phno, shortName };
     console.log("Success:", values);
-    const result = await axios.post(ServerApi + "/Forms/add", values);
+    const result = await axios.patch(ServerApi + "/Forms/update", values);
     if (result) {
       if (result.data.err) {
         message.error(result.data.err);
@@ -116,9 +121,50 @@ const AddForms = () => {
     }
     return Promise.reject(new Error("Please enter a valid phone number"));
   };
+  const getformdata = async (id) => {
+    //fetch getforms
+    const data = await axios.get(ServerApi + "/Forms/find/" + id);
+    if (data) {
+      console.log(data.data);
+      let { UserId, address, formGst, logo, name, phno, shortName } = data.data;
+      let lastIndex = (address).lastIndexOf(",");
+
+      // Find the index of the 4th last comma
+      let fourthLastIndex = address.lastIndexOf(
+        ",",
+        address.lastIndexOf(",", address.lastIndexOf(",") - 1) - 1
+      );
+
+      // Remove the string from the end up to the 4th last comma
+      let newAddress = address.substring(0, fourthLastIndex);
+      let parts = address.split(",");
+
+      // Get the last three values from the array
+      let lastThreeValues = parts.slice(-3);
+      getstate(lastThreeValues[2]);
+      secountry=capitalizeFirstLetter(lastThreeValues[2])
+      getcity(capitalizeFirstLetter(lastThreeValues[1]));
+      formdata.setFieldsValue({
+        id,
+        address: newAddress,
+        city: capitalizeFirstLetter(lastThreeValues[0]),
+        state: capitalizeFirstLetter(lastThreeValues[1]),
+        country: capitalizeFirstLetter(lastThreeValues[2]),
+        name,UserId,formGst,logo,phno,shortName
+      });
+      
+      setimgurl(logo);
+      setforms(data.data);
+    }
+  };
+  useEffect(() => {
+    getformdata(id);
+  }, []);
+
   return (
-    <div style={{ paddin: "20px" }}>
-      <h1>Create New Form</h1>
+    <div>
+      
+      <h1>Update Form</h1>
       <Card
         style={{
           paddin: "20px",
@@ -158,7 +204,20 @@ const AddForms = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your Form name!",
+                  message: "Please input your id!",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="id"
+              name="id"
+              hidden="true"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Form id!",
                 },
               ]}
             >
@@ -258,7 +317,7 @@ const AddForms = () => {
                 },
               ]}
             >
-              <Select onChange={(e) => getstate(e)}>
+              <Select key={country} onChange={(e) => getstate(e)}>
                 {country.map((c, index) => {
                   return (
                     <Select.Option key={index} value={c.name} label={c.name}>
@@ -274,7 +333,7 @@ const AddForms = () => {
               </Select>
             </Form.Item>
 
-            {state.length > 0 && (
+            {
               <Form.Item
                 label="State"
                 name="state"
@@ -286,7 +345,7 @@ const AddForms = () => {
                   },
                 ]}
               >
-                <Select key={state} onChange={(e) => getcity(e)}>
+                <Select  key={state} onChange={(e) => { console.log(e); return  getcity(e)}}>
                   {state.map((c, index) => {
                     return (
                       <Select.Option
@@ -298,8 +357,8 @@ const AddForms = () => {
                   })}
                 </Select>
               </Form.Item>
-            )}
-            {city.length > 0 && (
+            }
+            {
               <Form.Item
                 label="City"
                 name="city"
@@ -321,7 +380,7 @@ const AddForms = () => {
                   })}
                 </Select>
               </Form.Item>
-            )}
+            }
           </div>
           <Form.Item
             wrapperCol={{
@@ -332,11 +391,15 @@ const AddForms = () => {
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
+            <Link> <Button >
+              Cancel
+            </Button></Link>
           </Form.Item>
+          
         </Form>
       </Card>
     </div>
   );
 };
 
-export default AddForms;
+export default FormEdit;

@@ -15,13 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         return rawValue ? rawValue.toUpperCase() : null;
       },
     },
-    formGst: { type: DataTypes.STRING(15), uniq: true },
+    formGst: { type: DataTypes.STRING(15), unique: true },
     address: { type: DataTypes.STRING(250)},
 
-    phno: { type: DataTypes.INTEGER(10) },
+    phno: { type: DataTypes.BIGINT(10) },
     logo: { type: DataTypes.STRING(1000) },
   });
   Forms.associate=(modals)=>{
+    Forms.hasMany(modals.Goods);
     Forms.belongsTo(modals.Users);
   }
   return Forms;

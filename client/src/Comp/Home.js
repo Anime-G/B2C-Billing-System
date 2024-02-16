@@ -1,13 +1,29 @@
-import React from 'react'
-import { Carousel } from "antd";
+import React, { useContext, useEffect, useState } from 'react'
+import { Card, Carousel } from "antd";
+import { AuthContext } from '../Helper/AuthContext';
+import axios from 'axios';
+import { FormsEditNavkey, ServerApi } from './Consts';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-  
+  const {user}=useContext(AuthContext);
+  const [formlist, setformslist] = useState([]);
+  const [form, setforms] = useState(null);
+  const getformsList = async (id) => {
+    //fetch getforms
+    const data = await axios.get(ServerApi + "/Forms/" + id);
+    if (data) {
+      setformslist(data.data);
+    }
+  };
     const contentStyle = {
       margin: 0,
       height: "350px",
       background: 'linear-gradient(109.6deg, rgb(36, 45, 57) 11.2%, rgb(16, 37, 60) 51.2%, rgb(0, 0, 0) 98.6%)'
     };
+    useEffect(()=>{
+      getformsList(user.id)
+    },[])
   return (
     <div>
       <Carousel style={{ border: "10px black" }} autoplay="true">
@@ -70,6 +86,19 @@ const Home = () => {
         </div>
         
       </Carousel>
+      <h1>Form</h1>
+      <div style={{display:'flex',margin:"20px",background:"none",padding:20, gap:20}}> 
+      
+        {formlist.length!=0 &&
+        (<>
+        {formlist.map(form=>{
+          return <Link key={form.id} to={"/"+FormsEditNavkey+"/"+form.id} ><Card hoverable="true" style={{width:250}} >
+               <img draggable="false" src={form.logo} height={100}  />
+               <div> {form.name}
+               </div>
+          </Card></Link>
+        })}</>)}
+      </div>
     </div>
   )
 }

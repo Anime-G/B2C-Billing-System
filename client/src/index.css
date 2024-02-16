@@ -56,7 +56,7 @@ code {
   padding: 30px;
   font-size: 16px;
 }
-.text-card> p::before,p::after,h2::before,h2::after{
+.text-card> p::before,.text-card> p::after,.text-card>h2::before,.text-card>h2::after{
   content: "\"";
 }
 
