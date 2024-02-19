@@ -217,7 +217,7 @@ const Profile = () => {
           </Card>
           <Card style={{ margin: "20px auto", width: "25%" }}>
             <h4>About {form.name}</h4>
-            
+                      
           </Card>
         </div>
       )}
