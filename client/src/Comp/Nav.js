@@ -11,6 +11,8 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { AuthContext } from "../Helper/AuthContext";
 import {
+  AddBillsNavkey,
+  BillsNavkey,
   FormAddNavkey,
   FormsEditNavkey,
   GoodsAddNavkey,
@@ -29,6 +31,8 @@ import AddForms from "./AddForms";
 import Goods from "./Goods";
 
 import FormEdit from "./Form";
+import Bills from "./Bills";
+import AddBills from "./AddBills";
 const Nav = () => {
   const { user, setuser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -76,7 +80,8 @@ const Nav = () => {
           icon: <ProfileOutlined />,
         },
       ],
-    });
+    },
+    );
   }
   let path;
   useEffect(() => {
@@ -108,6 +113,8 @@ const Nav = () => {
             <Route path={"/" + FormAddNavkey} element={<AddForms />} />
             <Route path={"/" + FormsEditNavkey+"/:id"} element={<FormEdit />} />
             <Route path={"/" + GoodsAddNavkey} element={<Goods />} />
+            <Route path={"/" + BillsNavkey+"/:id"} element={<Bills />} />
+            <Route path={"/" + AddBillsNavkey} element={<AddBills />} />
           </>
         ) : (
           ""

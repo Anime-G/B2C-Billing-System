@@ -7,6 +7,7 @@ import { trimstring } from "../Trim";
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 import { Link } from "react-router-dom";
+import FormList from "antd/es/form/FormList";
 
 const Goods = () => {
   const { user } = useContext(AuthContext);
@@ -370,7 +371,9 @@ const Goods = () => {
           >
             <Row gutter={24}>
               <Col span={12}>
+                 
                 <Form.Item label="Select Form" name="form">
+                  
                   <Select key={formlist} onChange={(e) =>{ getformsGoods(e);setforms(e)}}>
                   <Select.Option key={-20} value={""}>
                           All
@@ -392,6 +395,7 @@ const Goods = () => {
                 >
                   <Button onClick={showModal}>+ Add Goods</Button>
                 </Form.Item>
+                <br/>
               </Col>
             </Row>
           </Form>

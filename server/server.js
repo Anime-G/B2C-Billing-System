@@ -9,11 +9,13 @@ app.use(express.json());
 const Users=require("./Routers/Users");
 const Forms=require("./Routers/Forms");
 const Goods=require("./Routers/Goods");
+const Bills=require("./Routers/Bills");
 
 //add to server
 app.use('/Users',Users)
 app.use('/Forms',Forms)
 app.use('/Goods',Goods)
+app.use('/Bills',Bills)
 
 db.sequelize.sync().then(()=>{
     app.listen(5000,()=>console.log("server: ",port))

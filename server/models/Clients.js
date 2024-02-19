@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Goods = sequelize.define("Goods", {
+    const Clients = sequelize.define("Clients", {
       name: {
         type: DataTypes.STRING(250),
         
@@ -8,15 +8,15 @@ module.exports = (sequelize, DataTypes) => {
           return rawValue ? rawValue.toUpperCase() : null;
         },
       },
-      HsnCode: {
+      phno: {
         type: DataTypes.INTEGER,
       },
-      GstRate: { type: DataTypes.DOUBLE},
     });
-    Goods.associate=(modals)=>{
-      Goods.hasMany(modals.BillItems);
-      Goods.belongsTo(modals.Forms);
+    Clients.associate=(modals)=>{
+      
+      Clients.hasMany(modals.Bills);
+      Clients.belongsTo(modals.Forms);
     }
-    return Goods;
+    return Clients;
   };
   

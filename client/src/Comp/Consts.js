@@ -6,4 +6,6 @@ export const LogoutNavKey='Logout'
 export const FormAddNavkey='FormAdd'
 export const GoodsAddNavkey='GoodsAdd'
 export const FormsEditNavkey='FormsEdit'
+export const BillsNavkey='Bills'
+export const AddBillsNavkey='AddBills'
 export const ServerApi="http://localhost:5000";

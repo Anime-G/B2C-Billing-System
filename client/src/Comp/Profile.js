@@ -28,6 +28,7 @@ const Profile = () => {
   
   const [formlist, setformslist] = useState([]);
   const [form, setforms] = useState(null);
+  const [goods, setgoods] = useState([]);
   const [activeItem, setActiveItem] = useState(null);
 
   const handleItemClick = (item) => {
@@ -41,6 +42,7 @@ const Profile = () => {
     getformdata(item);
     setActiveItem(item === activeItem ? null : item);
     setforms(item);
+    getformsGoods(item)
   }
   };
   const getformsList = async (id) => {
@@ -50,6 +52,14 @@ const Profile = () => {
       setformslist(data.data);
     }
   };
+  const getformsGoods=async(e)=>{
+    console.log(e);
+    if(e!="")
+    {const data=await axios.get(ServerApi+"/Goods/form/"+e);
+
+    setgoods(data.data);}
+    
+  }
   const getformdata = async (id) => {
     //fetch getforms
     const data = await axios.get(ServerApi + "/Forms/find/" + id);
@@ -216,8 +226,12 @@ const Profile = () => {
                       )}
           </Card>
           <Card style={{ margin: "20px auto", width: "25%" }}>
-            <h4>About {form.name}</h4>
-                      
+            <h4>About {form.name}</h4><hr/>
+            <h4 >Total Goods : {goods.length}</h4><hr/>
+            <h4>Total Bills :</h4><hr/>
+            {/* <h4>Total  :</h4><hr/> */}
+
+
           </Card>
         </div>
       )}
