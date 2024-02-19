@@ -10,6 +10,7 @@ import {
   Select,
   Tag,
   Tooltip,
+  Watermark,
 } from "antd";
 import { Option } from "antd/es/mentions";
 import axios from "axios";
@@ -19,10 +20,12 @@ import { EditOutlined, FolderViewOutlined, PlusOutlined } from "@ant-design/icon
 import { Link } from "react-router-dom";
 import { FormAddNavkey, FormsEditNavkey, ServerApi } from "./Consts";
 
+
+
 const Profile = () => {
   const { user } = useContext(AuthContext);
   const { id } = user;
-
+  
   const [formlist, setformslist] = useState([]);
   const [form, setforms] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
@@ -144,17 +147,20 @@ const Profile = () => {
       {form && (
         <div style={{ display: "flex" }}>
           <Card style={{ margin: "20px auto",textAlign:"left", width: "70%",background:"mediumseagreen" }}>
+        
             {form === null ? (
               <Result status={404} title="No Form is Selected!" />
-            ) : (
-              <div style={{transition:"all .5s ease-in-out"}}>
+            ) :(
+              
+              <div style={{zIndex:3,transition:"all .5s ease-in-out"}}>
+                
                 <h1 style={{textAlign:"center "}}>
                   {form.name} [{form.shortName}]
                 </h1>
                
                 <Row gutter={24}>
                   <Col span={4}>
-                    <Image src={form.logo} style={{ borderRadius: "2px",maxWidth:"250px",maxHeight:"200px"}} />
+                    <Image src={form.logo} style={{ zIndex:3,borderRadius: "2px",maxWidth:"250px",maxHeight:"200px"}} />
 
                   </Col>
                   <Col span={20}>
@@ -204,16 +210,14 @@ const Profile = () => {
                     </Row>
                   </Col>
                 </Row>
+
               </div>
-            )}
+         
+                      )}
           </Card>
           <Card style={{ margin: "20px auto", width: "25%" }}>
-            <h1>Extra Info</h1>
-            {form === null ? (
-              <Result status={404} title="No Form is Selected!" />
-            ) : (
-              console.log(form)
-            )}
+            <h4>About {form.name}</h4>
+            
           </Card>
         </div>
       )}

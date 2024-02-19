@@ -391,7 +391,7 @@ const FormEdit = () => {
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
-            <Link> <Button >
+            <Link to={"/"+ProfileNavKey} > <Button >
               Cancel
             </Button></Link>
           </Form.Item>

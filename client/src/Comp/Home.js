@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Card, Carousel } from "antd";
 import { AuthContext } from '../Helper/AuthContext';
 import axios from 'axios';
-import { FormsEditNavkey, ServerApi } from './Consts';
+import { FormsEditNavkey, ProfileNavKey, ServerApi } from './Consts';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -86,7 +86,7 @@ const Home = () => {
         </div>
         
       </Carousel>
-      <h1>Form</h1>
+      <Link to={"/"+ProfileNavKey} ><h1>Form</h1></Link>
       <div style={{display:'flex',margin:"20px",background:"none",padding:20, gap:20}}> 
       
         {formlist.length!=0 &&
