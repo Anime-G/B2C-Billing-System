@@ -22,10 +22,11 @@ module.exports = (sequelize, DataTypes) => {
     logo: { type: DataTypes.STRING(1000) },
   });
   Forms.associate=(modals)=>{
-    Forms.hasMany(modals.Goods);
-    Forms.hasMany(modals.Clients);
-    Forms.hasMany(modals.Bills);
+    Forms.hasMany(modals.Goods,{onDelete:'cascade'});
+    Forms.hasMany(modals.Clients,{onDelete:'cascade'});
+    Forms.hasMany(modals.Bills,{onDelete:'cascade'});
     Forms.belongsTo(modals.Users);
+   
   }
   return Forms;
 };

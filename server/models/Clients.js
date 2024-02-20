@@ -9,12 +9,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       phno: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
       },
     });
     Clients.associate=(modals)=>{
       
-      Clients.hasMany(modals.Bills);
+      Clients.hasMany(modals.Bills,{
+        onDelete:'cascade'
+      });
       Clients.belongsTo(modals.Forms);
     }
     return Clients;

@@ -190,3 +190,13 @@ ul {
  
 }
 
+.noinput
+{
+  background-color: none;
+  width:120;
+  font-size: 11;
+  background-color: #13547a !important;
+  color: white !important;
+  text-align: left ;
+  justify-content: center !important;
+}

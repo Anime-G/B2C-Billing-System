@@ -10,8 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       
     });
     Bills.associate=(modals)=>{
-        Bills.hasMany(modals.BillItems);
-        Bills.belongsTo(modals.Forms);
+        Bills.hasMany(modals.BillItems,{
+          onDelete:"cascade"
+        });
+      Bills.belongsTo(modals.Forms);
       Bills.belongsTo(modals.Clients);
     }
     return Bills;

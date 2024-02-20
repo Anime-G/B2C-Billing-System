@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     Goods.associate=(modals)=>{
       Goods.hasMany(modals.BillItems);
+     
       Goods.belongsTo(modals.Forms);
     }
     return Goods;
