@@ -39,7 +39,6 @@ const ShowBill = () => {
         <table
           border="2"
           style={{ width: "100%", margin: "0px auto" }}
-          
         >
           <tr>
             <td
@@ -76,8 +75,9 @@ const ShowBill = () => {
                 </div>
                 <img draggable="false" src={Form?.logo} height={95} />
               </div>
-              <p style={{ textAlign: "left", paddingLeft: 10, margin: 0 }}>
-                Address:<b> {Form?.address}</b>
+              <p style={{ display:"flex",justifyContent:"start", textAlign: "left", paddingLeft: 10, margin: 0 }}>
+                Address:&nbsp;
+                <b>{Form?.address}</b>
               </p>
             </td>
             <td colSpan={3} width={"fit-content"} height={"fit-content"}>
@@ -140,12 +140,12 @@ const ShowBill = () => {
                 <td>{rate}</td>
                 <td>{total}</td>
                 <td>
-                  {"(" + cgst + "%) "}
+                  {"[" + cgst + "%] "}
                   <br />
                   {cgstamt}
                 </td>
                 <td>
-                  {"(" + sgst + "%) "}
+                  {"[" + sgst + "%] "}
                   <br />
                   {sgstamt}
                 </td>

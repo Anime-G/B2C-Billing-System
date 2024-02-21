@@ -30,6 +30,7 @@ const Profile = () => {
   const [form, setforms] = useState(null);
   const [goods, setgoods] = useState([]);
   const [Bills, setBills] = useState(0);
+  const [Client, setclients] = useState(0);
   const [activeItem, setActiveItem] = useState(null);
 
   const handleItemClick = (item) => {
@@ -45,6 +46,7 @@ const Profile = () => {
     setforms(item);
     getformsGoods(item)
     getformsBills(item)
+    getformsclient(item)
   }
   };
   const getformsList = async (id) => {
@@ -68,6 +70,14 @@ const Profile = () => {
     {const data=await axios.get(ServerApi+"/Bills/count/"+e);
 
     setBills(data.data);}
+    
+  }
+  const getformsclient=async(e)=>{
+    console.log(e);
+    if(e!="")
+    {const data=await axios.get(ServerApi+"/Forms/Client/"+e);
+
+    setclients(data.data);}
     
   }
   const getformdata = async (id) => {
@@ -237,8 +247,9 @@ const Profile = () => {
           </Card>
           <Card style={{ margin: "20px auto", width: "25%" }}>
             <h4>About {form.name}</h4><hr/>
-            <h4 ><Link to={"/" + GoodsAddNavkey} >Total Goods : {goods.length}</Link></h4><hr/>
-            <h4><Link to={"/"+BillsNavkey+"/"+form.id} >Total Bills : {Bills}</Link></h4><hr/>
+            <h4 ><Link style={{color:"black"}} to={"/" + GoodsAddNavkey} >Total Goods : {goods.length}</Link></h4><hr/>
+            <h4><Link style={{color:"black"}}  to={"/"+BillsNavkey+"/"+form.id} >Total Bills : {Bills}</Link></h4><hr/>
+            <h4 style={{color:"black"}}  >Total Clients : {Client}</h4><hr/>
             {/* <h4>Total  :</h4><hr/> */}
           
 

@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Forms } = require("../models");
+const { Forms,Clients } = require("../models");
 const { Op } = require("sequelize");
 
 router.get("/:UserId",async(req,res)=>{
@@ -11,6 +11,10 @@ router.get("/:UserId",async(req,res)=>{
 })
 router.get("/find/:id",async(req,res)=>{
     const data=await Forms.findOne({where:{id:req.params.id}})
+    res.json(data);
+})
+router.get("/Client/:id",async(req,res)=>{
+    const data=await Clients.count({where:{FormId:req.params.id},duplicating: false})
     res.json(data);
 })
 router.post("/add",async(req,res)=>{
