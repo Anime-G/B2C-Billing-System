@@ -200,3 +200,6 @@ ul {
   text-align: left ;
   justify-content: center !important;
 }
+#Printcard table,#Printcard td,#Printcard th{
+  border-style: dashed !important;
+}

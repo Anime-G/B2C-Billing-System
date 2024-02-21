@@ -27,28 +27,15 @@ const ShowBill = () => {
     "-" +
     mydate.getFullYear();
   
-    const handlePrint = () => {
-        const printableElement = componentRef.current;
     
-        // Hide the button and other elements you don't want to print
-        const originalDisplay = printableElement.style.display;
-        printableElement.style.display = 'block';
-    
-        // Print only the content inside the card
-        window.print();
-    
-        // Restore the original display property
-        printableElement.style.display = originalDisplay;
-      };
   return (
-    <div style={{}}>
+    <div style={{width:"100%",margin:"0px auto   "}}>
       <div style={{ width: "100%", margin: "20px auto" }} class="hide">
-        <Button type="primary" onClick={handlePrint}>
+        <Button type="primary" onClick={()=>window.print()}>
           <PrinterOutlined />
         </Button>
       </div>
-      <Card style={{ width: "100%", margin: "30px auto" }} ref={componentRef}
-          id="Printcard">
+      <Card style={{ width: "80%", margin: "30px auto" }}  id="Printcard">
         <table
           border="2"
           style={{ width: "100%", margin: "0px auto" }}
@@ -87,7 +74,7 @@ const ShowBill = () => {
                     GstNo :<b> {Form?.formGst}</b>
                   </p>
                 </div>
-                <img src={Form?.logo} height={95} />
+                <img draggable="false" src={Form?.logo} height={95} />
               </div>
               <p style={{ textAlign: "left", paddingLeft: 10, margin: 0 }}>
                 Address:<b> {Form?.address}</b>
@@ -119,15 +106,15 @@ const ShowBill = () => {
             </td>
           </tr>
           <tr>
-            <td>#</td>
-            <td>Product</td>
-            <td>hsn Code</td>
-            <td>Qty</td>
-            <td>Rate</td>
-            <td>Amount</td>
-            <td>CGST</td>
-            <td>SGST</td>
-            <td>Total</td>
+            <th>#</th>
+            <th>Product</th>
+            <th width={20} >hsn Code</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Amount</th>
+            <th>CGST</th>
+            <th>SGST</th>
+            <th width={200}>Total</th>
           </tr>
           {BillItems?.map((item, index) => {
             console.log(item);
@@ -172,7 +159,7 @@ const ShowBill = () => {
             <td colSpan={7}></td>
             <td>Total</td>
             <td>
-              <b>{FinalTotal.toFixed(0)}</b>
+              <b>₹ {FinalTotal.toFixed(0)}</b>
             </td>
           </tr>
           <tr>
