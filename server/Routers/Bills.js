@@ -1,15 +1,32 @@
 const express = require("express");
 const router = express.Router();
 
-const { Bills, BillItems, Forms, Clients, Goods } = require("../models");
+const { Bills, BillItems, Forms, Clients,Users, Goods } = require("../models");
 const { Op } = require("sequelize");
-
+const Sequelize = require("sequelize");
 router.get("/:FormId", async (req, res) => {
   const { FormId } = req.params;
   const data = await Bills.findAll({
     where: { FormId },
-    includes: [{ modal: Forms }],
-    includes: [{ modal: Clients }],
+    order:[['Date','DESC'],['InvoiceNo','DESC']],
+    include: [{ model: Forms },{ model: Clients }],
+  });
+  res.json(data);
+});
+router.get("/count/:FormId", async (req, res) => {
+  const { FormId } = req.params;
+  const data = await Bills.count({
+    where: { FormId },
+  });
+  res.json(data);
+});
+router.get("/countbyuser/:id", async (req, res) => {
+  const { id } = req.params;
+  const data = await Forms.findAll({
+    where:{UserId:id},
+    include:[{model:Bills,attributes: [],duplicating: false}]
+    ,attributes:['id',[Sequelize.fn('COUNT', Sequelize.col('Bills.id')), 'NoOfBills']]
+    ,group: ['id']
   });
   res.json(data);
 });
@@ -59,6 +76,19 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.delete("/delete/:id", async (req, res) => {
+  const { id } = req.params;
+  
+  let data = await Bills.destroy({
+    where: { id },
+  });
+  
+  if (data) {
+    res.json({ msg: "Bill Deleted SuccessFully!" });
+  } else {
+    res.json({ err: "Bill Failed to delete!" });
+  }
+});
 router.get("/Invoiceno/:FormId", async (req, res) => {
   const { FormId } = req.params;
   const data = await Bills.findOne({

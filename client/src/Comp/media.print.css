@@ -1,0 +1,13 @@
+@media print {
+    
+    .hide,#menu,Footer{
+        display: none;
+    }
+    @page { size: auto;  margin: 0mm;}
+    Card{
+      display: block; /* Show the desired card */
+    }
+    #Printcard > * {
+        display: block; /* Show the desired card */
+      }
+  }

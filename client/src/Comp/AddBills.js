@@ -3,7 +3,7 @@ import { ServerApi } from "./Consts";
 import axios from "axios";
 import { AuthContext } from "../Helper/AuthContext";
 import { Button, Card, DatePicker, Form, Input, InputNumber, Select, Table, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import Temp from "./Temp";
@@ -14,7 +14,7 @@ const AddBills = () => {
   const [form, setforms] = useState([]);
   // const [Bills, setBills] = useState([]);
   const [formdata] = Form.useForm();
- 
+ const navigate=useNavigate();
   const getformdata = async (id) => {
     //fetch getforms
     const data = await axios.get(ServerApi + "/Forms/" + id);
@@ -43,7 +43,7 @@ const AddBills = () => {
         message.error(result.data.err);
       } else {
         message.success(result.data.msg);
-        
+        navigate("/Bills/"+FormId);
       }
     } else {
       message.error("Internal Server Error");

@@ -20,6 +20,7 @@ import {
   LoginNavkey,
   LogoutNavKey,
   ProfileNavKey,
+  ShowBillsNavkey,
   UserNavKey,
 } from "./Consts";
 import Home from "./Home";
@@ -33,6 +34,7 @@ import Goods from "./Goods";
 import FormEdit from "./Form";
 import Bills from "./Bills";
 import AddBills from "./AddBills";
+import ShowBill from "./ShowBill";
 const Nav = () => {
   const { user, setuser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -103,6 +105,7 @@ const Nav = () => {
         selectedKeys={[current]}
         mode="horizontal"
         items={items}
+        id="menu"
       />
       <Routes>
         <Route path={"/"} element={user.id ? <Home /> : <DispHome />} />
@@ -114,6 +117,7 @@ const Nav = () => {
             <Route path={"/" + FormsEditNavkey+"/:id"} element={<FormEdit />} />
             <Route path={"/" + GoodsAddNavkey} element={<Goods />} />
             <Route path={"/" + BillsNavkey+"/:id"} element={<Bills />} />
+            <Route path={"/" + ShowBillsNavkey+"/:id"} element={<ShowBill />} />
             <Route path={"/" + AddBillsNavkey} element={<AddBills />} />
           </>
         ) : (

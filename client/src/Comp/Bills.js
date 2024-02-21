@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { AddBillsNavkey, ServerApi } from './Consts';
-import { Button, Pagination, Table } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { AddBillsNavkey, ServerApi, ShowBillsNavkey } from './Consts';
+import { Button, Pagination, Popconfirm, Table, message } from 'antd';
+import { DeleteOutlined, EyeOutlined, PlusOutlined, PrinterOutlined } from '@ant-design/icons';
 
 const Bills = () => {
   const {id}=useParams();
@@ -12,7 +12,7 @@ const Bills = () => {
   
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const totalItems = 20;
+  const totalItems = Bills.length;
   const getformdata = async (id) => {
     //fetch getforms
     const data = await axios.get(ServerApi + "/Forms/find/" + id);
@@ -32,18 +32,35 @@ const Bills = () => {
     getBillsdata(id);
   },[currentPage, pageSize])
 
-
+  const deleteBill = async (bid) => {
+    //fetch getforms
+    const result = await axios.delete(ServerApi + "/Bills/delete/" + bid);
+    if (result) {
+      if (result.data.err) {
+        message.error(result.data.err);
+      } else {
+        message.success(result.data.msg);
+        getBillsdata(id);
+      }
+    } else {
+      message.error("Internal Server Error");
+    }
+  };
   const columns = [
     {
       title: '#',
       dataIndex: 'id',
       key: 'id',
-      render:(record,index)=>index,
+      render:(text,record,index)=>index+1,
     },
     {
       title: 'Name',
-      dataIndex: 'name',
+      dataIndex: 'id',
       key: 'name',
+      render:(text,record,index)=>{
+        console.log(record);
+       return record.Form.shortName+"-"+record.InvoiceNo+"-"+record.Client.name
+      },
     },
     {
       title: 'Invoice No',
@@ -54,7 +71,30 @@ const Bills = () => {
       title: 'Date',
       dataIndex: 'Date',
       key: 'address',
+      render:(text,record)=>{
+        var  mydate = new Date(record.Date);
+       return (mydate.getDate()+"/"+(mydate.getMonth()+1)+"/"+mydate.getFullYear());
+      }
     },
+    {
+      title: 'Actions',
+      dataIndex: 'Date',
+      key: 'address',
+      render:(text,record)=>{
+       return (<div style={{display:"flex",gap:10}}>
+       <Link to={"/"+ShowBillsNavkey+"/"+record.id} ><Button type='primary' ><EyeOutlined  />/<PrinterOutlined /></Button></Link>
+       <Popconfirm
+    title="Delete the Bill"
+    description={"Are you sure to delete this "+record.Form.shortName+"-"+record.InvoiceNo+"-"+record.Client.name+"?"}
+    onConfirm={()=>deleteBill(record.id)}
+   
+    okText="Yes"
+    cancelText="No"
+  >
+    <Button type='primary' danger><DeleteOutlined /></Button>
+  </Popconfirm></div>)
+      }
+    }
   ];
 
   const handlePageChange = (page, pageSize) => {
@@ -71,6 +111,7 @@ const Bills = () => {
           ?
           <>
         <Table
+        style={{width:"90%",margin:"10px auto"}}
         columns={columns}
         dataSource={Bills}
         pagination={false} // Disable built-in pagination
@@ -80,8 +121,6 @@ const Bills = () => {
         pageSize={pageSize}
         total={totalItems}
         onChange={handlePageChange}
-        showSizeChanger
-        showQuickJumper
         showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
       />
         </>

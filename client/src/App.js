@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+
 import "./App.css";
 import Nav from "./Comp/Nav";
 import { AuthContext } from "./Helper/AuthContext";
@@ -7,7 +7,7 @@ import axios from "axios";
 import { ServerApi } from "./Comp/Consts";
 import { message } from "antd";
 import Footer from "./Comp/Footer";
-
+import './Comp/media.print.css'
 function App() {
   const [user, setuser] = useState({});
   const getuser = async () => {
